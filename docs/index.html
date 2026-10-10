@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#0a0f1d">
+    <meta
+      name="description"
+      content="LuckyDraw helps you run fair random draws and share verifiable results."
+    >
+    <title>LuckyDraw — Fair random draws. Simple to run.</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+        color: #f8fafc;
+        background: #0a0f1d;
+        font-synthesis: none;
+        text-rendering: optimizeLegibility;
+        --panel: #0f1626;
+        --line: #1e293b;
+        --muted: #94a3b8;
+        --accent: #818cf8;
+        --mint: #34d399;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        min-width: 320px;
+        margin: 0;
+        background:
+          radial-gradient(ellipse at 50% 0, rgb(99 102 241 / 18%), transparent 38rem),
+          #0a0f1d;
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .wrap {
+        width: min(1120px, calc(100% - 40px));
+        margin-inline: auto;
+      }
+
+      .topbar {
+        position: sticky;
+        z-index: 1;
+        top: 0;
+        border-bottom: 1px solid rgb(30 41 59 / 80%);
+        background: rgb(10 15 29 / 88%);
+        backdrop-filter: blur(16px);
+      }
+
+      .nav {
+        display: flex;
+        min-height: 68px;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 1.05rem;
+        font-weight: 750;
+        letter-spacing: -0.03em;
+        text-decoration: none;
+      }
+
+      .brand-mark {
+        display: grid;
+        width: 34px;
+        height: 34px;
+        place-items: center;
+        border: 1px solid rgb(129 140 248 / 35%);
+        border-radius: 11px;
+        background: rgb(99 102 241 / 15%);
+        color: #c7d2fe;
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 22px;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      .nav-links a {
+        text-decoration: none;
+      }
+
+      .nav-links a:hover,
+      .text-link:hover {
+        color: white;
+      }
+
+      .button {
+        display: inline-flex;
+        min-height: 44px;
+        align-items: center;
+        justify-content: center;
+        padding: 0 18px;
+        border: 1px solid rgb(129 140 248 / 38%);
+        border-radius: 12px;
+        background: linear-gradient(135deg, #6366f1, #4f46e5);
+        box-shadow: 0 10px 30px -14px rgb(99 102 241 / 80%);
+        color: #fff;
+        font-size: 0.92rem;
+        font-weight: 700;
+        text-decoration: none;
+        transition: transform 150ms ease, filter 150ms ease;
+      }
+
+      .button:hover {
+        filter: brightness(1.12);
+        transform: translateY(-1px);
+      }
+
+      main {
+        overflow: hidden;
+      }
+
+      .hero {
+        padding-block: clamp(76px, 12vw, 140px) 76px;
+        text-align: center;
+      }
+
+      .eyebrow,
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border: 1px solid rgb(129 140 248 / 34%);
+        border-radius: 999px;
+        background: rgb(99 102 241 / 11%);
+        color: #c7d2fe;
+        font-size: 0.82rem;
+        font-weight: 650;
+      }
+
+      h1 {
+        max-width: 850px;
+        margin: 24px auto 0;
+        font-size: clamp(2.6rem, 7vw, 5rem);
+        letter-spacing: -0.065em;
+        line-height: 1.02;
+      }
+
+      .hero-copy {
+        max-width: 660px;
+        margin: 22px auto 0;
+        color: #a8b4c7;
+        font-size: clamp(1rem, 2vw, 1.18rem);
+        line-height: 1.75;
+      }
+
+      .notice {
+        max-width: 690px;
+        margin: 28px auto 0;
+        padding: 14px 17px;
+        border: 1px solid rgb(245 158 11 / 30%);
+        border-radius: 14px;
+        background: rgb(245 158 11 / 7%);
+        color: #fcd890;
+        font-size: 0.9rem;
+        line-height: 1.6;
+        text-align: left;
+      }
+
+      .hero .button {
+        margin-top: 26px;
+      }
+
+      .preview {
+        max-width: 780px;
+        margin: 62px auto 0;
+        padding: 20px;
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        background: linear-gradient(180deg, rgb(17 24 39 / 94%), rgb(15 22 38 / 92%));
+        box-shadow: 0 32px 100px -55px rgb(99 102 241 / 70%);
+        text-align: left;
+      }
+
+      .preview-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 2px 2px 17px;
+        border-bottom: 1px solid var(--line);
+        color: #dbe4f0;
+        font-size: 0.92rem;
+        font-weight: 650;
+      }
+
+      .remaining {
+        color: var(--mint);
+        font-size: 0.8rem;
+      }
+
+      .winners {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        padding-top: 16px;
+      }
+
+      .winner {
+        padding: 16px;
+        border: 1px solid var(--line);
+        border-radius: 15px;
+        background: rgb(2 6 23 / 25%);
+      }
+
+      .winner:first-child {
+        border-color: rgb(129 140 248 / 45%);
+        background: rgb(99 102 241 / 10%);
+      }
+
+      .winner small,
+      .winner span {
+        display: block;
+        color: var(--muted);
+        font-size: 0.75rem;
+      }
+
+      .winner strong {
+        display: block;
+        overflow: hidden;
+        margin-block: 7px;
+        font-size: 1rem;
+        text-overflow: ellipsis;
+      }
+
+      section {
+        padding-block: 76px;
+      }
+
+      .section-alt {
+        border-block: 1px solid var(--line);
+        background: rgb(15 22 38 / 48%);
+      }
+
+      .section-heading {
+        max-width: 650px;
+        margin-bottom: 30px;
+      }
+
+      h2 {
+        margin: 15px 0 0;
+        font-size: clamp(1.8rem, 4vw, 2.7rem);
+        letter-spacing: -0.045em;
+        line-height: 1.15;
+      }
+
+      .section-copy,
+      .card p {
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 15px;
+      }
+
+      .card {
+        padding: 20px;
+        border: 1px solid var(--line);
+        border-radius: 17px;
+        background: linear-gradient(180deg, rgb(17 24 39 / 92%), rgb(15 22 38 / 82%));
+      }
+
+      .card h3 {
+        margin: 15px 0 0;
+        font-size: 1rem;
+      }
+
+      .card p {
+        margin: 8px 0 0;
+        font-size: 0.88rem;
+      }
+
+      .step {
+        color: var(--accent);
+        font-family: ui-monospace, "Cascadia Code", monospace;
+        font-size: 0.82rem;
+        font-weight: 750;
+      }
+
+      .callout {
+        padding: clamp(25px, 6vw, 52px);
+        border: 1px solid rgb(129 140 248 / 24%);
+        border-radius: 22px;
+        background:
+          radial-gradient(ellipse at 50% 0, rgb(99 102 241 / 19%), transparent 65%),
+          var(--panel);
+        text-align: center;
+      }
+
+      .callout p {
+        max-width: 580px;
+        margin: 14px auto 22px;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      footer {
+        padding-block: 25px;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 0.85rem;
+      }
+
+      .footer-inner {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .text-link {
+        color: #c7d2fe;
+        text-decoration: none;
+      }
+
+      @media (max-width: 760px) {
+        .grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 520px) {
+        .wrap {
+          width: min(100% - 30px, 1120px);
+        }
+
+        .nav-links {
+          gap: 14px;
+        }
+
+        .nav-links .nav-anchor {
+          display: none;
+        }
+
+        .nav-links .button {
+          min-height: 40px;
+          padding-inline: 13px;
+          font-size: 0.84rem;
+        }
+
+        .winners {
+          grid-template-columns: 1fr;
+        }
+
+        section {
+          padding-block: 56px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          scroll-behavior: auto !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <nav class="wrap nav" aria-label="Main navigation">
+        <a class="brand" href="#top" aria-label="LuckyDraw home">
+          <span class="brand-mark" aria-hidden="true">✦</span>
+          LuckyDraw
+        </a>
+        <div class="nav-links">
+          <a class="nav-anchor" href="#how">How it works</a>
+          <a class="nav-anchor" href="#features">Features</a>
+          <a class="button" href="https://github.com/Muraripothuru/Quickdraw">View source</a>
+        </div>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero wrap">
+        <span class="eyebrow"><span aria-hidden="true">✦</span> Fair, verifiable random draws</span>
+        <h1>LuckyDraw — fair random draws. Simple to run.</h1>
+        <p class="hero-copy">
+          Organize giveaways, classroom turns, team picks, and raffles with a
+          transparent process designed to make every result easier to trust.
+        </p>
+        <p class="notice">
+          <strong>Static preview:</strong> this GitHub Pages site is informational only.
+          Creating draws, accounts, saved rosters, and live verification require the
+          full server-backed app and are not available on this page.
+        </p>
+        <a class="button" href="#how">See how it works <span aria-hidden="true">→</span></a>
+
+        <div class="preview" aria-label="Illustration of a completed draw">
+          <div class="preview-head">
+            <span><span aria-hidden="true">●</span> Monthly Newsletter Subscribers</span>
+            <span class="remaining">12 entries remaining</span>
+          </div>
+          <div class="winners">
+            <article class="winner">
+              <small>Winner #1</small>
+              <strong>Amara Okafor</strong>
+              <span>2 entries in pool</span>
+            </article>
+            <article class="winner">
+              <small>Winner #2</small>
+              <strong>Diego Ramírez</strong>
+              <span>1 entry in pool</span>
+            </article>
+            <article class="winner">
+              <small>Winner #3</small>
+              <strong>Mei-Ling Chen</strong>
+              <span>3 entries in pool</span>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-alt">
+        <div class="wrap">
+          <div class="section-heading">
+            <span class="badge">A transparent process</span>
+            <h2 id="how">From name list to verifiable result</h2>
+            <p class="section-copy">
+              The full app guides each draw through a clear sequence, from setting
+              up the participant pool to sharing the completed result.
+            </p>
+          </div>
+          <div class="grid">
+            <article class="card">
+              <span class="step">01 / CREATE</span>
+              <h3>Prepare the pool</h3>
+              <p>Add participant names, set entry weights, and choose how many winners to draw.</p>
+            </article>
+            <article class="card">
+              <span class="step">02 / LOCK</span>
+              <h3>Freeze entries</h3>
+              <p>Lock the pool before selection so entries cannot change during a draw.</p>
+            </article>
+            <article class="card">
+              <span class="step">03 / SELECT</span>
+              <h3>Pick winners</h3>
+              <p>Use a cryptographically secure random selection with no repeat winners.</p>
+            </article>
+            <article class="card">
+              <span class="step">04 / VERIFY</span>
+              <h3>Share the record</h3>
+              <p>Publish a result record with its seed commitment and winner details.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="features" class="wrap">
+        <div class="section-heading">
+          <span class="badge">Made for everyday draws</span>
+          <h2>Useful for groups of every kind</h2>
+        </div>
+        <div class="grid">
+          <article class="card">
+            <h3>Giveaways & raffles</h3>
+            <p>Run a clear selection for entries, prizes, and community events.</p>
+          </article>
+          <article class="card">
+            <h3>Classrooms & colleges</h3>
+            <p>Choose turns, groups, stage slots, or questions at random.</p>
+          </article>
+          <article class="card">
+            <h3>Teams & workplaces</h3>
+            <p>Assign rotations, pairings, activities, and shared responsibilities.</p>
+          </article>
+          <article class="card">
+            <h3>Reusable rosters</h3>
+            <p>Save participant lists and bring them into future draws in the full app.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="wrap">
+        <div class="callout">
+          <span class="badge">Open source</span>
+          <h2>Explore LuckyDraw on GitHub</h2>
+          <p>
+            Read the code, see how the draw flow works, and find instructions for
+            running the complete application on a server.
+          </p>
+          <a class="button" href="https://github.com/Muraripothuru/Quickdraw">
+            View the repository <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="wrap footer-inner">
+        <span>LuckyDraw · Fair random draws, made simple.</span>
+        <a class="text-link" href="https://github.com/Muraripothuru/Quickdraw">Source on GitHub</a>
+      </div>
+    </footer>
+  </body>
+</html>

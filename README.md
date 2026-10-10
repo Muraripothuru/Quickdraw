@@ -42,6 +42,18 @@ files are ignored by Git except for `.env.example`.
 | `npm run lint` | ESLint |
 | `npm run test:e2e` | End-to-end suite against a running server (`BASE_URL`, default `http://localhost:3100`) |
 
+## GitHub Pages
+
+The GitHub Pages deployment publishes the static informational page from `docs/`
+at <https://muraripothuru.github.io/Quickdraw/>. On GitHub, open **Settings →
+Pages** and set the build and deployment source to **GitHub Actions**. Subsequent
+pushes to `main` deploy the page automatically; the workflow can also be started
+manually from the Actions tab.
+
+GitHub Pages cannot run this app's Next.js server, API routes, authentication, or
+SQLite database. The Pages site is therefore a landing-page preview; use the full
+server-backed application to create draws, manage rosters, or verify results.
+
 ## End-to-end test
 
 `tests/e2e.mjs` drives the whole product over HTTP: page rendering, guest scope,
