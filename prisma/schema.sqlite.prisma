@@ -1,0 +1,107 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/sqlite"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("SQLITE_DATABASE_URL")
+}
+
+model User {
+  id           String       @id @default(cuid())
+  email        String       @unique
+  passwordHash String
+  displayName  String
+  createdAt    DateTime     @default(now())
+  sessions     Session[]
+  rosters      SavedRoster[]
+  draws        Draw[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+
+  @@index([userId])
+}
+
+model SavedRoster {
+  id             String    @id @default(cuid())
+  userId         String?
+  user           User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  guestKey       String?
+  title          String
+  names          String
+  guestExpiresAt DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@index([userId])
+  @@index([guestKey])
+}
+
+model Draw {
+  id                    String        @id
+  userId                String?
+  user                  User?         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  guestKey              String?
+  guestExpiresAt        DateTime?
+  name                  String
+  eventName             String?
+  prize                 String?
+  status                String        @default("DRAFT")
+  totalParticipants     Int           @default(0)
+  totalEntries          Int           @default(0)
+  winnerCountTarget     Int           @default(1)
+  winnersSelectedCount  Int           @default(0)
+  removeWinnersOnSelect Boolean       @default(true)
+  animationStyle        String        @default("wheel")
+  soundEnabled          Boolean       @default(true)
+  privacy               String        @default("public")
+  seedCommitment        String        @default("")
+  createdAt             DateTime      @default(now())
+  lockedAt              DateTime?
+  completedAt           DateTime?
+  participants          Participant[]
+  winners               Winner[]
+
+  @@index([userId])
+  @@index([guestKey])
+}
+
+model Participant {
+  id                 String   @id @default(cuid())
+  drawId             String
+  draw               Draw     @relation(fields: [drawId], references: [id], onDelete: Cascade)
+  name               String
+  entryCount         Int      @default(1)
+  status             String   @default("ACTIVE")
+  position           Int      @default(0)
+  selectionOrder     Int?
+  selectedAt         DateTime?
+  entropyFingerprint String?
+  winners            Winner[]
+
+  @@index([drawId, status])
+}
+
+model Winner {
+  id                    String      @id @default(cuid())
+  drawId                String
+  draw                  Draw        @relation(fields: [drawId], references: [id], onDelete: Cascade)
+  participantId         String
+  participant           Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  name                  String
+  drawOrder             Int
+  entryCountAtSelection Int
+  entropyFingerprint    String
+  selectedAt            DateTime    @default(now())
+
+  @@unique([drawId, drawOrder])
+  @@index([drawId])
+}

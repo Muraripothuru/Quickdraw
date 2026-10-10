@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "postinstall": "prisma generate",
     "dev": "node scripts/check-client-secrets.mjs --prebuild && next dev",
     "build": "node scripts/check-client-secrets.mjs --prebuild && next build && node scripts/check-client-secrets.mjs --scan",
     "start": "next start",

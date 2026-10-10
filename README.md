@@ -4,14 +4,14 @@ Fair, verifiable random draws for giveaways, classrooms, raffles and teams.
 Create a draw, load a roster, lock the pool, spin one of four reveal animations,
 then share a public verification link with the seed commitment and winner record.
 
-Built with **Next.js 16 (App Router, Cache Components)**, **Prisma + SQLite**,
+Built with **Next.js 16 (App Router, Cache Components)**, **Prisma + PostgreSQL**,
 **Tailwind 4**, **Framer Motion** and **canvas-confetti**.
 
 ## Getting started
 
 ```bash
 npm install
-npx prisma migrate dev   # creates prisma/dev.db and applies migrations
+npx prisma migrate dev   # applies PostgreSQL migrations
 npm run dev              # http://localhost:3000
 ```
 
@@ -20,11 +20,12 @@ When opened in VS Code, the workspace starts the development server on
 
 ## Environment
 
-Copy `.env.example` to `.env`:
+Copy `.env.example` to `.env` and set both PostgreSQL connection URLs:
 
 | Variable | Required | Purpose |
 | --- | --- | --- |
-| `DATABASE_URL` | yes | Prisma SQLite database, e.g. `file:./dev.db` |
+| `DATABASE_URL` | yes | PostgreSQL connection URL; use the provider's pooled URL for app queries |
+| `DIRECT_URL` | yes | Direct PostgreSQL URL for Prisma migrations (non-pooled) |
 
 Keep API keys and other credentials in server-only environment variables.
 Never use the `NEXT_PUBLIC_` prefix for secrets; the development server and
@@ -53,6 +54,23 @@ manually from the Actions tab.
 GitHub Pages cannot run this app's Next.js server, API routes, authentication, or
 SQLite database. The Pages site is therefore a landing-page preview; use the full
 server-backed application to create draws, manage rosters, or verify results.
+
+## Vercel deployment
+
+Import this GitHub repository into Vercel as a Next.js project. Create a managed
+PostgreSQL database (for example, Neon) and configure `DATABASE_URL` and
+`DIRECT_URL` for Production, Preview, and Development as appropriate. Run
+`npx prisma migrate deploy` against the production database before using the
+deployed app. Do not point a deployment at a local SQLite file: Vercel's
+serverless filesystem is not persistent.
+
+To transfer the existing local SQLite data, create `.env` with `SQLITE_DATABASE_URL`
+pointing to the existing SQLite file and `DATABASE_URL`/`DIRECT_URL` pointing to
+the target PostgreSQL database. Run `npx prisma migrate deploy`, then
+`npx prisma generate --schema prisma/schema.sqlite.prisma`, and finally
+`node --env-file=.env scripts/migrate-sqlite-to-postgres.mjs`. The transfer aborts
+unless the destination tables are empty. Keep connection strings in ignored
+local environment files; never commit them.
 
 ## End-to-end test
 
