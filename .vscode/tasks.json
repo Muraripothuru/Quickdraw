@@ -1,0 +1,32 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Start Lucky Draw dev server",
+            "type": "shell",
+            "command": "npm",
+            "args": [
+                "run",
+                "dev",
+                "--",
+                "--port",
+                "3002"
+            ],
+            "isBackground": true,
+            "runOptions": {
+                "runOn": "folderOpen"
+            },
+            "problemMatcher": {
+                "owner": "custom",
+                "pattern": {
+                    "regexp": "^(.*)$"
+                },
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "^> luckydraw@.* dev$",
+                    "endsPattern": "Ready in|Local:.*localhost:3002"
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,213 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #0a0f1d;
+  --color-panel: #0f1626;
+  --color-panel2: #111827;
+  --color-line: #1e293b;
+  --color-accent: #6366f1;
+  --color-accent2: #818cf8;
+  --color-mint: #10b981;
+  --color-muted: #94a3b8;
+  --color-fg: #f8fafc;
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background-color: var(--color-ink);
+  color: var(--color-fg);
+  font-family: var(--font-sans), system-ui, -apple-system, "Segoe UI", sans-serif;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--color-accent) 45%, transparent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent2);
+  outline-offset: 2px;
+}
+
+@layer components {
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 48px;
+    padding: 0 1.25rem;
+    border-radius: 0.9rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    line-height: 1;
+    transition:
+      background-color 0.18s ease,
+      border-color 0.18s ease,
+      color 0.18s ease,
+      transform 0.12s ease,
+      opacity 0.18s ease;
+    cursor: pointer;
+    border: 1px solid transparent;
+    white-space: nowrap;
+  }
+  .btn:active {
+    transform: translateY(1px);
+  }
+  .btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    transform: none;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+    color: #fff;
+    box-shadow: 0 10px 30px -12px rgba(99, 102, 241, 0.8);
+  }
+  .btn-primary:hover:not(:disabled) {
+    background: linear-gradient(135deg, #818cf8 0%, #6366f1 100%);
+  }
+  .btn-mint {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: #04150f;
+  }
+  .btn-mint:hover:not(:disabled) {
+    background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+  }
+  .btn-outline {
+    background: rgba(148, 163, 184, 0.04);
+    border-color: #1e293b;
+    color: #e2e8f0;
+  }
+  .btn-outline:hover:not(:disabled) {
+    border-color: #6366f1;
+    background: rgba(99, 102, 241, 0.1);
+  }
+  .btn-ghost {
+    background: transparent;
+    color: #cbd5e1;
+  }
+  .btn-ghost:hover:not(:disabled) {
+    background: rgba(148, 163, 184, 0.1);
+    color: #fff;
+  }
+  .btn-danger {
+    background: rgba(239, 68, 68, 0.12);
+    border-color: rgba(239, 68, 68, 0.35);
+    color: #fca5a5;
+  }
+  .btn-danger:hover:not(:disabled) {
+    background: rgba(239, 68, 68, 0.22);
+  }
+  .btn-lg {
+    min-height: 56px;
+    font-size: 1.05rem;
+    padding: 0 1.75rem;
+    border-radius: 1rem;
+  }
+  .btn-sm {
+    min-height: 40px;
+    padding: 0 0.85rem;
+    font-size: 0.85rem;
+    border-radius: 0.7rem;
+  }
+
+  .card {
+    background: linear-gradient(180deg, rgba(17, 24, 39, 0.9), rgba(15, 22, 38, 0.9));
+    border: 1px solid #1e293b;
+    border-radius: 1.25rem;
+  }
+
+  .field {
+    width: 100%;
+    min-height: 48px;
+    padding: 0.7rem 0.9rem;
+    border-radius: 0.8rem;
+    background: rgba(2, 6, 23, 0.6);
+    border: 1px solid #1e293b;
+    color: #f8fafc;
+    font-size: 0.95rem;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .field::placeholder {
+    color: #64748b;
+  }
+  .field:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.22);
+  }
+  .field-error {
+    border-color: #ef4444;
+  }
+
+  .label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: #94a3b8;
+    margin-bottom: 0.4rem;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.3rem 0.65rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border: 1px solid #1e293b;
+    background: rgba(148, 163, 184, 0.06);
+    color: #cbd5e1;
+  }
+
+  .hairline {
+    border-color: #1e293b;
+  }
+}
+
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: #1e293b transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media print {
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-sheet {
+    color: #000 !important;
+    background: #fff !important;
+  }
+  .print-sheet * {
+    color: #000 !important;
+    border-color: #cbd5e1 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+}
