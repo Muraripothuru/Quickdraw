@@ -67,11 +67,12 @@ persistent.
 
 To transfer the existing local SQLite data, create `.env` with `SQLITE_DATABASE_URL`
 pointing to the existing SQLite file and `DATABASE_URL`/`DIRECT_URL` pointing to
-the target PostgreSQL database. Run `npx prisma migrate deploy`, then
+the target PostgreSQL database. Stop the local dev server, then run
+`npx prisma generate`, `npx prisma migrate deploy`,
 `npx prisma generate --schema prisma/schema.sqlite.prisma`, and finally
 `node --env-file=.env scripts/migrate-sqlite-to-postgres.mjs`. The transfer aborts
-unless the destination tables are empty. Keep connection strings in ignored
-local environment files; never commit them.
+unless the destination tables are empty. Keep connection strings in ignored local
+environment files; never commit them.
 
 ## End-to-end test
 
