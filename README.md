@@ -60,9 +60,10 @@ server-backed application to create draws, manage rosters, or verify results.
 Import this GitHub repository into Vercel as a Next.js project. Create a managed
 PostgreSQL database (for example, Neon) and configure `DATABASE_URL` and
 `DIRECT_URL` for Production, Preview, and Development as appropriate. Run
-`npx prisma migrate deploy` against the production database before using the
-deployed app. Do not point a deployment at a local SQLite file: Vercel's
-serverless filesystem is not persistent.
+the initial data transfer below before the first deployment. The Vercel build
+command applies pending Prisma migrations before building. Do not point a
+deployment at a local SQLite file: Vercel's serverless filesystem is not
+persistent.
 
 To transfer the existing local SQLite data, create `.env` with `SQLITE_DATABASE_URL`
 pointing to the existing SQLite file and `DATABASE_URL`/`DIRECT_URL` pointing to
